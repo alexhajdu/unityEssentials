@@ -1,6 +1,6 @@
 ﻿/*
  * 
- * Last update: 18.08.2017
+ * Last update: 12.10.2017
  * AH
  * 
  */
@@ -308,6 +308,26 @@ public static class ExtensionMethods
 		}
 	}
 
+	public static T GetFirstComponentUpwardWithInterface<T>(this GameObject inGameObject) where T : class
+    {
+        return GameObjectUtils.GetFirstComponentUpwardWithInterface<T>(inGameObject);
+    }
+
+    public static T GetFirstComponentUpward<T>(this GameObject inGameObject) where T : Component
+    {
+        return GameObjectUtils.GetFirstComponentUpward<T>(inGameObject);
+    }
+
+    public static T GetComponentWithInterface<T>(this GameObject inGameObject) where T : class
+    {
+        return GameObjectUtils.GetComponentWithInterface<T>(inGameObject);
+    }
+
+    public static string GetFullName(this GameObject inGameObject)
+    {
+        return GameObjectUtils.GetFullName(inGameObject);
+    }
+
 	#endregion
 
 	#region Bounds
@@ -423,4 +443,68 @@ public static class ExtensionMethods
 	}
 
 	#endregion
+
+	internal class GameObjectUtils {
+
+    public static T GetFirstComponentUpward<T>(GameObject inGameObject) where T : Component
+    {
+        if(inGameObject == null)
+            return null;
+
+        T t = inGameObject.GetComponent<T>();
+
+        if(t != null)
+            return t;
+		
+		if(inGameObject.transform.parent == null || inGameObject.transform.parent.gameObject == null)
+			return null;
+
+        return GetFirstComponentUpward<T>(inGameObject.transform.parent.gameObject);
+    }
+
+	//	------------------
+
+    public static T GetComponentWithInterface<T>(GameObject inGameObject) where T : class
+    {
+        foreach(Component comp in inGameObject.GetComponents<Component>())
+        {
+            T t = comp as T;
+            if(t != null)
+                return t;
+        }
+
+        return default(T);
+    }
+
+    public static T GetFirstComponentUpwardWithInterface<T>(GameObject inGameObject) where T : class
+    {
+        if(inGameObject != null)
+        {
+            foreach(Component comp in inGameObject.GetComponents<Component>())
+            {
+                T t = comp as T;
+                if(t != null)
+                    return t;
+            }
+
+            if(inGameObject.transform.parent != null && inGameObject.transform.parent.gameObject != null)
+            {   return GetFirstComponentUpwardWithInterface<T>(inGameObject.transform.parent.gameObject);  }
+
+        }
+
+        return default(T);
+    }
+    static public string GetFullName(GameObject inObject)
+    {
+        if(inObject)
+        {
+            if(inObject.transform.parent)
+                return GetFullName(inObject.transform.parent.gameObject) + "/" + inObject.name;
+
+            return inObject.name;
+        }
+
+        return "";
+    }
+}
 }

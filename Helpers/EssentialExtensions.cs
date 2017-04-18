@@ -1,6 +1,6 @@
 ﻿/*
  * 
- * Last update: 12.10.2017
+ * Last update: 18.04.2017
  * AH
  * 
  */
@@ -225,6 +225,13 @@ public static class ExtensionMethods
 		return Helpers.HSVToRGB ( h, s, v );
 	}
 
+	public static Color GetColorFromString( this Color color, string colorString )
+	{
+		color = Color.clear;
+		ColorUtility.TryParseHtmlString ( colorString, out color );
+		return color;
+	}
+
 	/// <summary>
 	/// Saturates the color by percent -> 1.2 ( 20 more ), 0.8 ( 20% less )
 	/// </summary>
@@ -283,18 +290,6 @@ public static class ExtensionMethods
 	}
 		
 	#endregion
-
-	public static Coroutine StartUniqueCoroutine ( this MonoBehaviour m, System.Func<IEnumerator> func )
-	{
-		m.StopCoroutine ( func.Method.Name );
-		return m.StartCoroutine ( func.Method.Name );
-	}
-
-	public static Coroutine StartUniqueCoroutine<T> ( this MonoBehaviour m, System.Func<T, IEnumerator> func, T value )
-	{
-		m.StopCoroutine ( func.Method.Name );
-		return m.StartCoroutine ( func.Method.Name, value );
-	}
 
 	#region GameObject
 

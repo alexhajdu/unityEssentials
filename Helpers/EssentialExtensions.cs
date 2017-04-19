@@ -25,6 +25,13 @@ namespace AH.Helpers
 			return ( int ) Mathf.Log ( input, 2 );
 		}
 
+		public static Color GetColorFromString ( string colorString )
+		{
+			var color = Color.clear;
+			ColorUtility.TryParseHtmlString ( colorString, out color );
+			return color;
+		}
+
 		//	Advanced modulo
 
 		public static int mod ( int k, int n )

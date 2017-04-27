@@ -1,2 +1,2 @@
 # unityEssentials
-Couple oof useful things for unity development.
+Couple of useful things for unity development.
